@@ -1,0 +1,72 @@
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Stock Central</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles-sign-in.css') }}">
+</head>
+<div class="container">
+    <!-- Left Image Section -->
+    <div class="left-section">
+        <img src="{{ url_for('static', filename='assets/warehouse.jpg') }}" alt="Warehouse Image">
+    </div>
+
+    <!-- Right Form Section -->
+    <div class="form-section">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='assets/stock-central-logo.png') }}" alt="Stock Central Logo">
+        </div>
+
+        <h1>Sign in</h1>
+        <p>Sign in if you already have an account</p>
+
+        <form action="/login" method="POST">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <span class="toggle-password" onclick="togglePassword()">
+                    <img src="{{ url_for('static', filename='assets/EyeSlash.png') }}" alt="Toggle Password">
+                </span>
+            </div>
+            <div class="options">
+                <label>
+                    <input type="checkbox" name="remember_me"> Remember me
+                </label>
+                <a href="{{ url_for('enter_email') }}">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn-submit">Sign In</button>
+
+            <div class="or-divider">Or</div>
+
+            <button type="button" class="btn-google">
+                <img src="{{ url_for('static', filename='assets/google-logo.png') }}" alt="Google Logo"> Sign in with Google
+            </button>
+        </form>
+
+        <div class="signup">
+            Don't have an account? <a href="{{ url_for('register') }}">Sign Up</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle Password Visibility
+    function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const toggleIcon = document.querySelector(".toggle-password img");
+        
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.src = "{{ url_for('static', filename='assets/Eye.png') }}"; // Ganti dengan ikon mata terbuka
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.src = "{{ url_for('static', filename='assets/EyeSlash.png') }}"; // Ganti dengan ikon mata tertutup
+        }
+    }
+</script>
+{% endblock %}

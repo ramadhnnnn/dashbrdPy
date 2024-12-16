@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit-page.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Inventory</h1>
+        <form method="POST" action="{{ url_for('main_bp.edit_item', id=item.IDNTE) }}">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="witel">Witel<span class="required">*</span></label>
+                    <select id="witel" name="witel">
+                        <option value="">Pilih Nama Witel</option>
+                        {% for witel in witels %}
+                            <option value="{{ witel.witelID }}" {% if item and item['namawitel'] == witel.namawitel %}selected{% endif %}>{{ witel.namawitel }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="STO">STO<span class="required">*</span></label>
+                    <select id="STO" name="STO">
+                        <option value="">Pilih sto</option>
+                        {% for sto in stos %}
+                            <option value="{{ sto.stoid }}" {% if item and item['KodeSTO'] == sto['KodeSTO'] %}selected{% endif %}>{{ sto['KodeSTO'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="warehouse">Warehouse<span class="required">*</span></label>
+                    <select id="warehouse" name="warehouse">
+                        <option value="">Pilih Warehouse</option>
+                        {% for warehouse in warehouses %}
+                            <option value="{{ warehouse.IDwarehouse }}" {% if item and item['WH/SO'] == warehouse['WH/SO'] %}selected{% endif %}>{{ warehouse['WH/SO'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-group">Item Group<span class="required">*</span></label>
+                    <select id="item-group" name="item_group">
+                        <option value="">Select Item Group</option>
+                        <option value="ACCESS POINT (AP)" {% if item and item['Item Group'] == 'ACCESS POINT (AP)' %}selected{% endif %}>ACCESS POINT (AP)</option>
+                        <option value="ADD ON" {% if item and item['Item Group'] == 'ADD ON' %}selected{% endif %}>ADD ON</option>
+                        <option value="AKSESORIS AP" {% if item and item['Item Group'] == 'AKSESORIS AP' %}selected{% endif %}>AKSESORIS AP</option>
+                        <option value="BIG ONT" {% if item and item['Item Group'] == 'BIG ONT' %}selected{% endif %}>BIG ONT</option>
+                        <option value="MODEM" {% if item and item['Item Group'] == 'MODEM' %}selected{% endif %}>MODEM</option>
+                        <option value="ONT" {% if item and item['Item Group'] == 'ONT' %}selected{% endif %}>ONT</option>
+                        <option value="STB" {% if item and item['Item Group'] == 'STB' %}selected{% endif %}>STB</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="jenis">Jenis<span class="required">*</span></label>
+                    <select id="jenis" name="jenis">
+                        <option value="">Select Jenis</option>
+                        <option value="ACC AP" {% if item and item['Jenis'] == 'ACC AP' %}selected{% endif %}>ACC AP</option>
+                        <option value="AP" {% if item and item['Jenis'] == 'AP' %}selected{% endif %}>AP</option>
+                        <option value="ENTERPRISE" {% if item and item['Jenis'] == 'ENTERPRISE' %}selected{% endif %}>ENTERPRISE</option>
+                        <option value="IP CAM" {% if item and item['Jenis'] == 'IP CAM' %}selected{% endif %}>IP CAM</option>
+                        <option value="MODEM" {% if item and item['Jenis'] == 'MODEM' %}selected{% endif %}>MODEM</option>
+                        <option value="NODE-B" {% if item and item['Jenis'] == 'NODE-B' %}selected{% endif %}>NODE-B</option>
+                        <option value="ONT DUAL BAND" {% if item and item['Jenis'] == 'ONT DUAL BAND' %}selected{% endif %}>ONT DUAL BAND</option>
+                        <option value="ONT PREMIUM" {% if item and item['Jenis'] == 'ONT PREMIUM' %}selected{% endif %}>ONT PREMIUM</option>
+                        <option value="ONT SINGLE BAND" {% if item and item['Jenis'] == 'ONT SINGLE BAND' %}selected{% endif %}>ONT SINGLE BAND</option>
+                        <option value="ORBIT" {% if item and item['Jenis'] == 'ORBIT' %}selected{% endif %}>ORBIT</option>
+                        <option value="OTT BOX/INDIBO" {% if item and item['Jenis'] == 'OTT BOX/INDIBO' %}selected{% endif %}>OTT BOX/INDIBO</option>
+                        <option value="PLC" {% if item and item['Jenis'] == 'PLC' %}selected{% endif %}>PLC</option>
+                        <option value="REMOTE" {% if item and item['Jenis'] == 'REMOTE' %}selected{% endif %}>REMOTE</option>
+                        <option value="STB" {% if item and item['Jenis'] == 'STB' %}selected{% endif %}>STB</option>
+                        <option value="WIFI EXTENDER" {% if item and item['Jenis'] == 'WIFI EXTENDER' %}selected{% endif %}>WIFI EXTENDER</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="merk-nte">Merek NTE<span class="required">*</span></label>
+                    <select id="merk-nte" name="merk_nte">
+                        <option value="">Select Merk NTE</option>
+                        <option value="AUTELAN" {% if item and item['Merek NTE'] == 'AUTELAN' %}selected{% endif %}>AUTELAN</option>
+                        <option value="BRECKET" {% if item and item['Merek NTE'] == 'BRECKET' %}selected{% endif %}>BRECKET</option>
+                        <option value="CISCO" {% if item and item['Merek NTE'] == 'CISCO' %}selected{% endif %}>CISCO</option>
+                        <option value="FIBERHOME" {% if item and item['Merek NTE'] == 'FIBERHOME' %}selected{% endif %}>FIBERHOME</option>
+                        <option value="HKM" {% if item and item['Merek NTE'] == 'HKM' %}selected{% endif %}>HKM</option>
+                        <option value="HUAWEI" {% if item and item['Merek NTE'] == 'HUAWEI' %}selected{% endif %}>HUAWEI</option>
+                        <option value="INDIBOX" {% if item and item['Merek NTE'] == 'INDIBOX' %}selected{% endif %}>INDIBOX</option>
+                        <option value="IP CAM" {% if item and item['Merek NTE'] == 'IP CAM' %}selected{% endif %}>IP CAM</option>
+                        <option value="MULTI POE" {% if item and item['Merek NTE'] == 'MULTI POE' %}selected{% endif %}>MULTI POE</option>
+                        <option value="NOKIA" {% if item and item['Merek NTE'] == 'NOKIA' %}selected{% endif %}>NOKIA</option>
+                        <option value="PLC" {% if item and item['Merek NTE'] == 'PLC' %}selected{% endif %}>PLC</option>
+                        <option value="POE" {% if item and item['Merek NTE'] == 'POE' %}selected{% endif %}>POE</option>
+                        <option value="TP-LINK" {% if item and item['Merek NTE'] == 'TP-LINK' %}selected{% endif %}>TP-LINK</option>
+                        <option value="WIFI EXTENDER" {% if item and item['Merek NTE'] == 'WIFI EXTENDER' %}selected{% endif %}>WIFI EXTENDER</option>
+                        <option value="ZTE" {% if item and item['Merek NTE'] == 'ZTE' %}selected{% endif %}>ZTE</option>
+                        <option value="ZYXEL" {% if item and item['Merek NTE'] == 'ZYXEL' %}selected{% endif %}>ZYXEL</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="type-nte">Type NTE<span class="required">*</span></label>
+                    <input type="text" id="type-nte" name="type_nte" placeholder="Enter Type NTE" value="{{ item['Type NTE'] if item else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="serial-number">Serial Number<span class="required">*</span></label>
+                    <input type="text" id="serial-number" name="serial_number" placeholder="Enter Serial Number" value="{{ item['Serial Number'] if item else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="segmentasi">Segmentasi<span class="required">*</span></label>
+                    <select id="segmentasi" name="segmentasi">
+                        <option value="">Select Segmentasi</option>
+                        <option value="CONSUMER" {% if item and item['Segmentasi'] == 'CONSUMER' %}selected{% endif %}>CONSUMER</option>
+                        <option value="EBIS" {% if item and item['Segmentasi'] == 'EBIS' %}selected{% endif %}>EBIS</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="status-stok">Status Stok<span class="required">*</span></label>
+                    <select id="status-stok" name="status_stok">
+                        <option value="NTE BARU" {% if item and item['Status Stok'] == 'NTE BARU' %}selected{% endif %}>NTE BARU</option>
+                        <option value="REFURBISH" {% if item and item['Status Stok'] == 'REFURBISH' %}selected{% endif %}>REFURBISH</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="jumlah-stok">Jumlah Stok<span class="required">*</span></label>
+                    <input type="number" id="jumlah-stok" name="jumlah_stok" placeholder="Enter Jumlah Stok" value="{{ item['Jumlah Stok'] if item else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="tanggal-masuk">Tanggal Masuk<span class="required">*</span></label>
+                    <input type="date" id="tanggal-masuk" name="tanggal_masuk" value="{{ item['Tanggal Masuk'] if item else '' }}">
+                </div>
+            </div>
+
+            <div class="form-buttons">
+                <button type="submit" class="btn-primary">Save</button>
+                <a href="{{ url_for('main_bp.inventory') }}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans">
+    <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar Section -->
+    <div class="fixed w-72 h-full bg-gray-50 p-4 flex flex-col border-r border-gray-300">
+        <div class="flex justify-between items-center pb-8">
+            <div class="logo">
+                <button class="w-32 bg-transparent border-none cursor-pointer">
+                    <img src="{{ url_for('static', filename='assets/Logo.svg') }}" alt="Stock Central Logo">
+                </button>
+            </div>
+            <button class="bg-transparent border-none cursor-pointer w-8 h-8">
+                <img src="{{ url_for('static', filename='assets/ArrowLineLeft.svg') }}" alt="Sign Out Icon" class="ml-auto">
+            </button>
+        </div>
+
+        <nav class="menu mt-0">
+            <p class="mb-2 text-gray-800">MENU</p>
+            <ul class="list-none p-0">
+                <li class="mb-2">
+                    <a href="{{ url_for('dashboard.dashboard_home') }}" class="flex items-center text-gray-800 text-base p-2 rounded-lg hover:bg-red-200 active">
+                        <img src="{{ url_for('static', filename='assets/House.png') }}" alt="Dashboard Icon" class="w-5 mr-2">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" class="flex items-center text-white font-medium bg-red-600 p-2 rounded-lg">
+                        <img src="{{ url_for('static', filename='assets/Archive-white.svg') }}" alt="Inventory Icon" class="w-5 mr-2">
+                        Inventory
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" class="flex items-center text-gray-800 text-base p-2 rounded-lg hover:bg-red-200">
+                        <img src="{{ url_for('static', filename='assets/ChartLine.svg') }}" alt="Reports Icon" class="w-5 mr-2">
+                        Reports & Analytics
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" class="flex items-center text-gray-800 text-base p-2 rounded-lg hover:bg-red-200">
+                        <img src="{{ url_for('static', filename='assets/Gear.svg') }}" alt="Settings Icon" class="w-5 mr-2">
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="h-px bg-gray-300 my-4"></div>
+
+        <div class="help-support mt-0">
+            <p class="mt-3 mb-2 text-gray-600">HELP & SUPPORT</p>
+            <a href="#" class="flex items-center text-gray-600 p-2 rounded-lg hover:bg-red-200">
+                <img src="{{ url_for('static', filename='assets/QuestionMark.svg') }}" alt="Help Icon" class="w-5 mr-2">User Guide
+            </a>
+        </div>
+
+        <div class="profile flex items-center justify-between mt-auto px-2 py-2 bg-white rounded-lg border border-gray-300 hover:bg-red-200">
+            <img src="{{ url_for('static', filename='assets/Avatar.png') }}" alt="Michelle Wijaya" class="w-10 h-10 rounded-full mr-2">
+            <div class="flex flex-col mr-2">
+                <span class="text-gray-800">Michelle Wijaya</span>
+                <span class="text-sm text-gray-600">michellew7@gmail.com</span>
+            </div>
+            <button class="bg-transparent border-none cursor-pointer">
+                <img src="{{ url_for('static', filename='assets/CaretUpDown.svg') }}" alt="Caret Icon" class="w-5">
+            </button>
+        </div>
+    </div>
+
+        <!-- Main Content Wrapper -->
+        <div class="flex-1 ml-72 flex flex-col h-screen overflow-hidden">
+            <!-- Topbar -->
+            <div class="flex justify-between items-center p-4 bg-white border-b border-gray-300">
+                <h1 class="text-3xl font-medium text-gray-800">Inventory</h1>
+                <div class="flex items-center gap-5">
+                    <button class="p-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600">
+                        <img src="{{ url_for('static', filename='assets/DotsThree.png') }}" class="w-5 h-5">
+                    </button>
+                    <button class="p-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600">
+                        <img src="{{ url_for('static', filename='assets/Bell.png') }}" class="w-5 h-5">
+                    </button>
+                    <button class="flex items-center p-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-600">
+                        <img src="{{ url_for('static', filename='assets/Avatar.png') }}" class="w-6 h-6 rounded-full">
+                        <span class="ml-2 text-gray-800">Michelle</span>
+                        <img src="{{ url_for('static', filename='assets/CaretDown.png') }}" class="ml-1 w-4 h-4">
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Main Content Section -->
+            <div class="flex-1 flex flex-col p-4 bg-white overflow-hidden">
+                <!-- Header Section for Inventory Stock -->
+                <header class="flex justify-between items-center mb-4">
+                    <div>
+                        <h1 class="text-base font-semibold text-gray-800">Inventory Stock</h1>
+                        <p class="text-sm text-gray-600">This section provides data to help you track stock availability</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="{{ url_for('main_bp.export_inventory') }}" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Export to Excel</a>
+                        <button class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" id="addProductButton">Add Product</button>
+                    </div>
+                </header>
+               <!-- Filter Section -->
+                <form action="{{ url_for('main_bp.filter_data') }}" method="GET" class="filter-section flex justify-between items-center p-2 space-x-2">
+                    <!-- Search bar -->
+                    <input type="text" name="search" value="{{ request.args.get('search', '') }}" 
+                        class="search-bar w-64 p-1 text-sm border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-1 focus:ring-red-600" 
+                        placeholder="Search Item Group atau Jenis">
+                    
+                    <div class="filter-buttons flex gap-2">
+                        <!-- WITEL Select -->
+                        <select name="witel" class="p-1 text-sm bg-white text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-600">
+                            <option value="">WITEL</option>
+                            <option value="REGIONAL JAWA BARAT" {% if request.args.get('witel') == 'REGIONAL JAWA BARAT' %}selected{% endif %}>REGIONAL JAWA BARAT</option>
+                            <option value="BANDUNG BARAT" {% if request.args.get('witel') == 'WITEL BANDUNG BARAT' %}selected{% endif %}>WITEL BANDUNG BARAT</option>
+                            <option value="JABAR SELATAN (SUKABUMI)" {% if request.args.get('witel') == 'WITEL JABAR SELATAN (SUKABUMI)' %}selected{% endif %}>WITEL JABAR SELATAN (SUKABUMI)</option>
+                            <option value="JABAR TENGAH (BANDUNG)" {% if request.args.get('witel') == 'WITEL JABAR TENGAH (BANDUNG)' %}selected{% endif %}>WITEL JABAR TENGAH (BANDUNG)</option>
+                            <option value="JABAR TIMSEL (TASIKMALAYA)" {% if request.args.get('witel') == 'WITEL JABAR TIMSEL (TASIKMALAYA)' %}selected{% endif %}>WITEL JABAR TIMSEL (TASIKMALAYA)</option>
+                            <option value="JABAR TIMUR (CIREBON)" {% if request.args.get('witel') == 'WITEL JABAR TIMUR (CIREBON)' %}selected{% endif %}>WITEL JABAR TIMUR (CIREBON)</option>
+                            <option value="JABAR_UTARA (KARAWANG)" {% if request.args.get('witel') == 'WITEL JABAR UTARA (KARAWANG)' %}selected{% endif %}>WITEL JABAR UTARA (KARAWANG)</option>
+                        </select>
+
+                        <!-- Item Group Select -->
+                        <select name="item_group" class="p-1 text-sm bg-white text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-600">
+                            <option value="">JENIS NTE</option>
+                            <option value="ACCESS POINT (AP)" {% if request.args.get('item_group') == 'ACCESS POINT (AP)' %}selected{% endif %}>ACCESS POINT (AP)</option>
+                            <option value="ADD ON" {% if request.args.get('item_group') == 'ADD ON' %}selected{% endif %}>ADD ON</option>
+                            <option value="AKSESORIS AP" {% if request.args.get('item_group') == 'AKSESORIS AP' %}selected{% endif %}>AKSESORIS AP</option>
+                            <option value="BIG ONT" {% if request.args.get('item_group') == 'BIG ONT' %}selected{% endif %}>BIG ONT</option>
+                            <option value="MODEM" {% if request.args.get('item_group') == 'MODEM' %}selected{% endif %}>MODEM</option>
+                            <option value="ONT" {% if request.args.get('item_group') == 'ONT' %}selected{% endif %}>ONT</option>
+                            <option value="STB" {% if request.args.get('item_group') == 'STB' %}selected{% endif %}>STB</option>
+                        </select>
+
+                        <!-- Date Filter -->
+                        <div class="flex items-center gap-1">
+                            <input type="date" name="daily" value="{{ request.args.get('daily', '') }}" 
+                                class="p-1 text-sm bg-white text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-600">
+                        </div>
+
+                        <!-- Filter Button -->
+                        <button type="submit" class="p-1 px-3 bg-white text-gray-800 text-sm border border-gray-300 rounded-md flex items-center gap-1 focus:outline-none focus:ring-1 focus:ring-red-600 hover:bg-gray-50">
+                            <img src="{{ url_for('static', filename='assets/Filter.png') }}" alt="Filter Icon" class="w-4 h-4"> 
+                            FILTER
+                        </button>
+
+                        <!-- Reset Button -->
+                        <a href="{{ url_for('main_bp.inventory') }}" class="p-1 px-3 bg-white text-gray-800 text-sm border border-gray-300 rounded-md flex items-center hover:bg-gray-50">Reset</a>
+                    </div>
+                </form>
+
+
+                <script>
+                    // Show/Hide dropdowns
+                    document.querySelectorAll('#witel-button, #jenis-ont-button, #daily-button').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const dropdownId = this.id.replace('-button', '-dropdown');
+                            const dropdown = document.getElementById(dropdownId);
+                            
+                            // Close other dropdowns
+                            document.querySelectorAll('.dropdown').forEach(d => {
+                                if (d.id !== dropdownId) d.classList.add('hidden');
+                            });
+                            
+                            dropdown.classList.toggle('hidden');
+                        });
+                    });
+
+                    // Close dropdowns when clicking outside
+                    window.addEventListener('click', function(e) {
+                        if (!e.target.closest('.filter-buttons')) {
+                            document.querySelectorAll('.dropdown').forEach(d => d.classList.add('hidden'));
+                        }
+                    });
+
+                    // Search functionality for dropdowns
+                    ['witel-search', 'jenis-ont-search'].forEach(searchId => {
+                        document.getElementById(searchId)?.addEventListener('input', function() {
+                            const filter = this.value.toLowerCase();
+                            const options = this.parentElement.querySelector('.dropdown-options').children;
+                            
+                            Array.from(options).forEach(option => {
+                                const text = option.textContent.toLowerCase();
+                                option.style.display = text.includes(filter) ? '' : 'none';
+                            });
+                        });
+                    });
+                </script>
+
+               <!-- Add Product Modal -->
+                <div id="addProduct" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-80">
+                    <div class="bg-white p-6 rounded-lg w-full max-w-xl">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-medium text-gray-800">Add Product</h2>
+                            <button id="closeBtn" class="bg-transparent border-none cursor-pointer">
+                                <img src="{{ url_for('static', filename='assets/x.png') }}" class="w-6 h-6">
+                            </button>
+                        </div>
+                        <hr class="border-t border-gray-300 mb-4">
+                        <form id="addProductForm" method="POST" action="{{ url_for('main_bp.add_item') }}">
+                            <div class="grid grid-cols-2 gap-4">
+
+                                <div>
+                                    <label for="witel" class="block mb-2 text-gray-800">WITEL</label>
+                                    <select id="witel" name="witel" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600" required>
+                                        <option value="">Select Witel</option>
+                                        {% for witel in witels %}
+                                            <option value="{{ witel.witelID }}">{{ witel.namawitel }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                              
+
+                                <div>
+                                    <label for="sto" class="block mb-2 text-gray-800">STO</label>
+                                    <select id="sto" name="STO" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600" required>
+                                        <option value="">Select STO</option>
+                                        {% for sto in stos %}
+                                            <option value="{{ sto.stoid }}">{{ sto['KodeSTO'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="wh-so" class="block mb-2 text-gray-800">WH SO</label>
+                                    <select id="wh-so" name="warehouse" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600" required>
+                                        <option value="">Select WH SO</option>
+                                        {% for warehouse in warehouses %}
+                                            <option value="{{ warehouse.IDwarehouse }}">{{ warehouse['WH/SO'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="item-group" class="block mb-2 text-gray-800">Jenis NTE</label>
+                                    <select id="item-group" name="item_group" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600">
+                                        <option value="">Select Jenis NTE</option>
+                                        <option value="ACCESS POINT (AP)">ACCESS POINT (AP)</option>
+                                        <option value="ADD ON">ADD ON</option>
+                                        <option value="AKSESORIS AP">AKSESORIS AP</option>
+                                        <option value="BIG ONT">BIG ONT</option>
+                                        <option value="MODEM">MODEM</option>
+                                        <option value="ONT">ONT</option>
+                                        <option value="STB">STB</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="jenis" class="block mb-2 text-gray-800">SUB JENIS NTE</label>
+                                    <select id="jenis" name="jenis" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600">
+                                        <option value="">Select NTE</option>
+                                        <option value="ACC AP">ACC AP</option>
+                                        <option value="AP">AP</option>
+                                        <option value="ENTERPRISE">ENTERPRISE</option>
+                                        <option value="IP CAM">IP CAM</option>
+                                        <option value="MODEM">MODEM</option>
+                                        <option value="NODE-B">NODE-B</option>
+                                        <option value="ONT DUAL BAND">ONT DUAL BAND</option>
+                                        <option value="ONT PREMIUM">ONT PREMIUM</option>
+                                        <option value="ONT SINGLE BAND">ONT SINGLE BAND</option>
+                                        <option value="ORBIT">ORBIT</option>
+                                        <option value="OTT BOX/INDIBOX">OTT BOX/INDIBOX</option>
+                                        <option value="PLC">PLC</option>
+                                        <option value="REMOTE">REMOTE</option>
+                                        <option value="STB">STB</option>
+                                        <option value="WIFI EXTENDER">WIFI EXTENDER</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="merk-nte" class="block mb-2 text-gray-800">MERK NTE</label>
+                                    <select id="merk-nte" name="merk_nte" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600">
+                                        <option value="">Select Merk NTE</option>
+                                        <option value="AUTELAN">AUTELAN</option>
+                                        <option value="BRECKET">BRECKET</option>
+                                        <option value="CISCO">CISCO</option>
+                                        <option value="FIBERHOME">FIBERHOME</option>
+                                        <option value="HKM">HKM</option>
+                                        <option value="HUAWEI">HUAWEI</option>
+                                        <option value="INDIBOX">INDIBOX</option>
+                                        <option value="IP CAM">IP CAM</option>
+                                        <option value="MULTI POE">MULTI POE</option>
+                                        <option value="NOKIA">NOKIA</option>
+                                        <option value="PLC">PLC</option>
+                                        <option value="POE">POE</option>
+                                        <option value="TP-LINK">TP-LINK</option>
+                                        <option value="WIFI EXTENDER">WIFI EXTENDER</option>
+                                        <option value="ZTE">ZTE</option>
+                                        <option value="ZYXEL">ZYXEL</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="type-nte" class="block mb-2 text-gray-800">TYPE NTE</label>
+                                    <input type="text" id="type-nte" name="type_nte" placeholder="Enter Type NTE" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 placeholder-gray-600 focus:ring-2 focus:ring-red-600">
+                                </div>
+
+                                <div>
+                                    <label for="serial-number" class="block mb-2 text-gray-800">SERIAL NUMBER</label>
+                                    <input type="text" id="serial-number" name="serial_number" placeholder="Enter Serial Number" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 placeholder-gray-600 focus:ring-2 focus:ring-red-600">
+                                </div>
+
+                                <div>
+                                    <label for="segmentasi" class="block mb-2 text-gray-800">Segmentasi</label>
+                                    <select id="segmentasi" name="segmentasi" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600" required>
+                                        <option value="">Select Segmentasi</option>
+                                        <option value="CONSUMER">CONSUMER</option>
+                                        <option value="EBIS">EBIS</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="status-stok" class="block mb-2 text-gray-800">STATUS STOK</label>
+                                    <select id="status-stok" name="status_stok" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600">
+                                        <option value="NTE BARU">NTE BARU</option>
+                                        <option value="REFURBISH">REFURBISH</option>
+                                        <option value="DISMANTLING">DISMANTLING</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="jumlah-stok" class="block mb-2 text-gray-800">JUMLAH STOK</label>
+                                    <input type="number" id="jumlah-stok" name="jumlah_stok" placeholder="Enter Jumlah Stok" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 placeholder-gray-600 focus:ring-2 focus:ring-red-600">
+                                </div>
+
+                                <div>
+                                    <label for="tanggal-masuk" class="block mb-2 text-gray-800">TANGGAL MASUK</label>
+                                    <input type="date" id="tanggal-masuk" name="tanggal_masuk" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-gray-600 focus:ring-2 focus:ring-red-600">
+                                </div>
+                            </div>
+
+                            <div class="mt-4 flex justify-end gap-4">
+                                <button type="button" id="cancelBtn" class="w-full p-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Cancel</button>
+                                <button type="submit" id="saveBtn" class="w-full p-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>  
+
+                <!-- Inventory Table Section -->
+                <div class="flex-1 overflow-hidden">
+                    <div class="flex-1 overflow-x-auto overflow-y-auto relative h-full">
+                    <table class="w-full min-w-[1000px] border-collapse">
+                        <thead>
+                            <tr class="bg-white sticky top-0 z-10">
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">No</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Witel</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Kode STO</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Warehouse</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Jenis NTE</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Sub Jenis NTE</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Merk NTE</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Type NTE</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Serial Number</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Segmentasi</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Status Stock</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Jumlah Stok</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Tanggal Masuk</th>
+                                <th class="px-4 py-3 border-t border-gray-300 text-gray-500 font-semibold text-center">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if items %}
+                                {% for item in items %}
+                                <tr class="hover:bg-red-200">
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ loop.index }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item.namawitel }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['KodeSTO'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['WH/SO'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Item Group'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Jenis'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Merek NTE'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Type NTE'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Serial Number'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Segmentasi'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Status Stok'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Jumlah Stok'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">{{ item['Tanggal Masuk'] }}</td>
+                                    <td class="px-4 py-3 border-t border-gray-300 text-center">
+                                    <div class="inline-flex gap-2">
+                                        <a href="{{ url_for('main_bp.edit_item', id=item.IDNTE) }}" class="px-4 py-2 border border-gray-300 text-gray-800 font-semibold rounded hover:bg-gray-200">Edit</a>
+                                        <a href="{{ url_for('main_bp.delete_item', id=item.IDNTE) }}" class="px-4 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 ml-2" onclick="return confirm('Are you sure you want to delete?')">DELETE</a>
+                                    </div>
+                                 </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="13" class="px-4 py-3 text-center">No data found.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+
+    <script>
+        const productModal = document.getElementById('addProduct');
+        const addProductButton = document.getElementById('addProductButton');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const closeBtn = document.getElementById('closeBtn');
+
+        addProductButton.addEventListener('click', () => productModal.classList.remove('hidden'));
+        cancelBtn.addEventListener('click', () => productModal.classList.add('hidden'));
+        closeBtn.addEventListener('click', () => productModal.classList.add('hidden'));
+
+        window.onclick = function(event) {
+            if (event.target === productModal) {
+                productModal.classList.add('hidden');
+            }
+        };
+    </script>
+</body>
+</html>

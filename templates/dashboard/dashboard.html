@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+<body class="flex h-screen overflow-hidden">
+     <!-- Sidebar Section -->
+     <div class="fixed w-72 h-full bg-gray-50 p-4 flex flex-col border-r border-gray-300">
+        <div class="flex justify-between items-center pb-8">
+            <div class="logo">
+                <button class="w-32 bg-transparent border-none cursor-pointer">
+                    <img src="{{ url_for('static', filename='assets/Logo.svg') }}" alt="Stock Central Logo">
+                </button>
+            </div>
+            <button class="bg-transparent border-none cursor-pointer w-8 h-8">
+                <img src="{{ url_for('static', filename='assets/ArrowLineLeft.svg') }}"alt="Sign Out Icon" class="ml-auto">
+            </button>
+        </div>
+        <nav class="menu mt-0">
+            <p class="mb-2 text-gray-800">MENU</p>
+            <ul class="list-none p-0">
+                <li class="mb-2">
+                    <a href="#" class="flex items-center text-white font-medium bg-red-600 p-2 rounded-lg">
+                    <img src="{{ url_for('static', filename='assets/House-white.svg') }}"alt="Inventory Icon" class="w-5 mr-2">Dashboard    
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="{{ url_for('main_bp.inventory') }}" class="flex items-center text-gray-800 text-base p-2 rounded-lg hover:bg-red-200 active">
+                        <img src="{{ url_for('static', filename='assets/Archive.svg') }}" alt="Inventory Icon" class="w-5 mr-2">
+                        Inventory
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" class="flex items-center text-gray-800 text-base p-2 rounded-lg hover:bg-red-200">
+                        <img src="{{ url_for('static', filename='assets/ChartLine.svg') }}" alt="Reports Icon" class="w-5 mr-2">
+                        Reports & Analytics
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" class="flex items-center text-gray-800 text-base p-2 rounded-lg hover:bg-red-200">
+                        <img src="{{ url_for('static', filename='assets/Gear.svg') }}"  alt="Settings Icon" class="w-5 mr-2">
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="h-px bg-gray-300 my-4"></div>
+
+        <div class="help-support mt-0">
+            <p class="mt-3 mb-2 text-gray-600">HELP & SUPPORT</p>
+            <a href="#" class="flex items-center text-gray-600 p-2 rounded-lg hover:bg-red-200">
+                <img src="{{ url_for('static', filename='assets/QuestionMark.svg') }}"  alt="Help Icon" class="w-5 mr-2">User Guide
+            </a>
+        </div>
+
+        <div class="profile flex items-center justify-between mt-auto px-2 py-2 bg-white rounded-lg border border-gray-300 hover:bg-red-200">
+            <img src="{{ url_for('static', filename='assets/Avatar.png') }}"  alt="Michelle Wijaya" class="w-10 h-10 rounded-full mr-2">
+            <div class="flex flex-col mr-2">
+                <span class="text-gray-800">Michelle Wijaya</span>
+                <span class="text-sm text-gray-600">michellew7@gmail.com</span>
+            </div>
+            <button class="bg-transparent border-none cursor-pointer">
+                <img src="{{ url_for('static', filename='assets/CaretUpDown.svg') }}"alt="Caret Icon" class="w-5">
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-grow flex flex-col bg-gray-100 ml-72">
+        <!-- Topbar Section -->
+        <div class="flex justify-between items-center p-4 bg-white border-b border-gray-200">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+            </div>
+
+            <div class="flex items-center gap-5">
+                <button class="p-1 bg-white border border-gray-200 rounded-lg cursor-pointer flex items-center justify-center focus:outline-none focus:shadow-outline">
+                    <img src="{{ url_for('static', filename='assets/DotsThree.png') }}" alt="option">
+                </button>
+                <button class="p-1 bg-white border border-gray-200 rounded-lg cursor-pointer flex items-center justify-center focus:outline-none focus:shadow-outline">
+                    <img src="{{ url_for('static', filename='assets/Bell.png') }}" alt="Notifications">
+                </button>
+                <button class="flex items-center gap-1 p-1 bg-white border border-gray-200 rounded-lg cursor-pointer focus:outline-none focus:shadow-outline">
+                    <img src="{{ url_for('static', filename='assets/avatar.png') }}" alt="profile-picture" class="w-6 h-6 rounded-full">
+                    <span class="text-base text-gray-500">Michelle</span>
+                    <img src="{{ url_for('static', filename='assets/CaretDown.png') }}" alt="dropdown-icon" class="w-3">
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="flex-grow p-5 bg-white overflow-y-auto">
+            <header class="flex justify-between items-start mb-5">
+                <div>
+                    <h1 class="text-lg font-bold text-gray-800">Comprehensive Sales Metrics</h1>
+                    <p class="text-sm text-gray-500 mt-1">This section offers a thorough analysis to help you track performance and drive growth</p>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <button class="flex items-center gap-1 px-4 py-2 rounded-lg bg-red-600 border-0 text-base text-white cursor-pointer transition duration-300 hover:bg-red-700 justify-center">
+                        <img src="{{ url_for('static', filename='assets/BoxArrowUp-white.svg') }}" alt="export CVS" class="w-5 h-5">
+                        Export CSV
+                    </button>
+                </div>
+            </header>
+            <div class="flex gap-5 mt-2.5 flex-wrap">
+            <!-- Total Stock per Item Group -->
+            <div class="flex-1 bg-white rounded-lg p-4 border border-gray-300">
+                <header class="flex justify-between items-center mb-5">
+                    <h2 class="text-lg font-bold text-gray-800 m-0">Total Stock by Jenis NTE</h2>
+                    <div class="flex items-center gap-2.5">
+                        <div class="relative inline-block">
+                            <select name="warehouse" id="wh-stock-item" required class="appearance-none p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-20 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                <option value="">WH</option>
+                                {% for warehouse in warehouses %}
+                                    <option value="{{ warehouse.IDwarehouse }}">{{ warehouse['WH/SO'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="relative inline-block">
+                            <input type="date" id="start-date-stock-item" name="start_date" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        </div>
+                        <div class="relative inline-block">
+                            <input type="date" id="end-date-stock-item" name="end_date" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        </div>
+                        <button class="p-1 cursor-pointer bg-transparent border-none" id="resetStockItem">
+                            <img src="{{ url_for('static', filename='assets/Refresh.svg') }}" alt="Reset" class="w-7 h-7">
+                        </button>
+                    </div>
+                </header>
+                <div class="text-center">
+                    <div class="w-full h-80 bg-gray-100 flex justify-center items-center rounded-lg text-gray-500 text-sm">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stock Distribution per Warehouse -->
+            <div class="flex-1 bg-white rounded-lg p-4 border border-gray-300">
+                <header class="flex justify-between items-center mb-5">
+                    <h2 class="text-lg font-bold text-gray-800 m-0">Stock Distribution</h2>
+                    <div class="flex items-center gap-2.5">
+                        <div class="relative inline-block">
+                            <select name="warehouse" id="wh-distribution" required class="appearance-none p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-20 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                <option value="">WH</option>
+                                {% for warehouse in warehouses %}
+                                    <option value="{{ warehouse.IDwarehouse }}">{{ warehouse['WH/SO'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="relative inline-block">
+                            <input type="date" id="start-date-distribution" name="start_date" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        </div>
+                        <div class="relative inline-block">
+                            <input type="date" id="end-date-distribution" name="end_date" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        </div>
+                        <button class="p-1 cursor-pointer bg-transparent border-none" id="resetDistribution">
+                            <img src="{{ url_for('static', filename='assets/Refresh.svg') }}" alt="Reset" class="w-7 h-7">
+                        </button>
+                    </div>
+                </header>
+                <div class="w-full h-80 bg-gray-100 flex justify-center items-center rounded-lg text-gray-500 text-sm">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+            <!-- Stock per Entry Date -->
+            <div class="flex-1 bg-white rounded-lg p-4 border border-gray-300">
+                <header class="flex justify-between items-center mb-5">
+                    <h2 class="text-lg font-bold text-gray-800 m-0">Stock by Entry Date</h2>
+                    <div class="flex items-center gap-2.5">
+                        <div class="relative inline-block">
+                            <select name="warehouse" id="wh-entry-date" required class="appearance-none p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-20 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                <option value="">WH</option>
+                                {% for warehouse in warehouses %}
+                                    <option value="{{ warehouse.IDwarehouse }}">{{ warehouse['WH/SO'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="relative inline-block">
+                            <input type="date" id="start-date-entry" name="start_date" placeholder="Start" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        </div>
+                        <div class="relative inline-block">
+                            <input type="date" id="end-date-entry" name="end_date" placeholder="Start" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        </div>
+                        <button class="p-1 cursor-pointer bg-transparent border-none" id="resetEntryDate">
+                            <img src="{{ url_for('static', filename='assets/Refresh.svg') }}" alt="Reset" class="w-7 h-7">
+                        </button>
+                    </div>
+                </header>
+                <div class="text-center">
+                    <div class="w-full h-80 bg-gray-100 flex justify-center items-center rounded-lg text-gray-500 text-sm">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stock Status Distribution -->
+            <div class="flex-1 bg-white rounded-lg p-4 border border-gray-300">
+                <header class="flex justify-between items-center mb-5">
+                    <h2 class="text-lg font-bold text-gray-800 m-0">Stock Status Distribution</h2>
+                    <div class="flex items-center gap-2.5">
+                        <div class="relative inline-block">
+                            <select name="warehouse" id="wh-status" required class="appearance-none p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-20 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                <option value="">WH</option>
+                                {% for warehouse in warehouses %}
+                                    <option value="{{ warehouse.IDwarehouse }}">{{ warehouse['WH/SO'] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="relative inline-block">
+                            <input type="date" id="start-date-status" name="start_date" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        </div>
+                        <div class="relative inline-block">
+                            <input type="date" id="end-date-status" name="end_date" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        </div>
+                        <button class="p-1 cursor-pointer bg-transparent border-none" id="resetStatus">
+                            <img src="{{ url_for('static', filename='assets/Refresh.svg') }}" alt="Reset" class="w-7 h-7">
+                        </button>
+                    </div>
+                </header>
+                <div class="w-full h-80 bg-gray-100 flex justify-center items-center rounded-lg text-gray-500 text-sm">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+            </div>
+            <!-- Mixet chart SUB JENIS-->
+            <div class="flex-1 bg-white rounded-lg p-4 border border-gray-300">
+                <header class="flex justify-between items-center mb-5">
+                     <h2 class="text-lg font-bold text-gray-800 m-0">Persentase Stok Grown</h2>
+                        <div class="flex items-center gap-2.5">
+                          <div class="relative inline-block">
+                            <select name="warehouse" id="wh-sub-date" required class="appearance-none p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-20 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                 <option value="">WH</option>
+                                    {% for warehouse in warehouses %}
+                                          <option value="{{ warehouse.IDwarehouse }}">{{ warehouse['WH/SO'] }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="relative inline-block">
+                                     <select name="item_group" id="item-group-entry-date" required class="appearance-none p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                            <option value="">Jenis NTE</option>
+                                        {% for item in item_groups %}
+                                            <option value="{{ item['Item Group'] }}">{{ item['Item Group'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="relative inline-block">
+                                    <input type="date" id="start-date-sub-jenis" name="start_date" placeholder="Start" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                </div>
+                                <div class="relative inline-block">
+                                    <input type="date" id="end-date-sub-jenis" name="end_date" placeholder="Start" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                                </div>
+                                <button class="p-1 cursor-pointer bg-transparent border-none" id="resetSubJenis">
+                                    <img src="{{ url_for('static', filename='assets/Refresh.svg') }}" alt="Reset" class="w-7 h-7">
+                                 </button>
+                            </div>
+                            </header>
+                            <div class="text-center">
+                                <div class="w-full h-80 bg-gray-100 flex justify-center items-center rounded-lg text-gray-500 text-sm">
+                                    <canvas id="mixedChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Double Line Chart Section -->
+                        <div class="flex-1 bg-white rounded-lg p-4 border border-gray-300">
+                            <header class="flex justify-between items-center mb-5">
+                                <h2 class="text-lg font-bold text-gray-800 m-0"> Grown Line Analysis</h2>
+                                <div class="flex items-center gap-2.5">
+                                    <div class="relative inline-block">
+                                        <select name="warehouse" id="wh-doubleline" required class="appearance-none p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-20">
+                                            <option value="">Select Warehouse</option>
+                                            {% for warehouse in warehouses %}
+                                                <option value="{{ warehouse.IDwarehouse }}">{{ warehouse['WH/SO'] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="relative inline-block">
+                                        <input type="date" id="start-date-doubleline" name="start_date" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24">
+                                    </div>
+                                    <div class="relative inline-block">
+                                        <input type="date" id="end-date-doubleline" name="end_date" class="p-1.5 pr-7 bg-white border border-gray-200 rounded-lg text-sm cursor-pointer w-24">
+                                    </div>
+                                    <button class="p-1 cursor-pointer bg-transparent border-none" id="resetdoubleline">
+                                        <img src="{{ url_for('static', filename='assets/Refresh.svg') }}" alt="Reset" class="w-7 h-7">
+                                    </button>
+                                </div>
+                            </header>
+                            <div class="w-full h-80 bg-gray-100 flex justify-center items-center rounded-lg text-gray-500 text-sm">
+                                <canvas id="doubleLineChart"></canvas>
+                            </div>
+                        </div>
+            
+            <div class="flex-auto bg-white rounded-lg p-4 border border-gray-300">
+                <header class="flex justify-between items-center mb-5">
+                    <h2 class="text-lg font-bold text-gray-800 m-0">Recent Stock</h2>
+                    <div class="flex items-center gap-2.5">
+                        <button class="flex items-center justify-center px-2.5 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-800 text-sm cursor-pointer gap-1">
+                            <img src="{{ url_for('static', filename='assets/FunnelSimple.svg') }}" alt="sort-icon" class="w-4 h-4">
+                            Sort by
+                        </button>
+                        <button class="flex items-center justify-center px-2.5 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-800 text-sm cursor-pointer gap-1">
+                            <img src="{{ url_for('static', filename='assets/FunnelSimple.svg') }}" alt="filter-icon" class="w-4 h-4">
+                            Filter
+                        </button>
+                        <select class="flex items-center px-2.5 py-1.5 rounded-lg border border-gray-300 bg-white text-gray-800 text-sm cursor-pointer gap-1">
+                            <option>Monthly</option>
+                            <option>Yearly</option>
+                        </select>
+                        <button class="bg-white border border-gray-300 rounded-lg cursor-pointer p-1.5 flex items-center justify-center">
+                            <img src="{{ url_for('static', filename='assets/DotsThree.svg') }}" alt="option" class="w-4 h-4">
+                        </button>
+                    </div>
+                </header>
+                
+                <table class="w-full border-collapse text-base text-gray-800">
+                    <thead>
+                        <tr>
+                            <th class="border-t border-gray-200 px-3 py-3 text-center bg-white font-bold text-gray-500">Jenis NTE</th>
+                            <th class="border-t border-gray-200 px-3 py-3 text-center bg-white font-bold text-gray-500">Sub Jenis NTE</th>
+                            <th class="border-t border-gray-200 px-3 py-3 text-center bg-white font-bold text-gray-500">Merek NTE</th>
+                            <th class="border-t border-gray-200 px-3 py-3 text-center bg-white font-bold text-gray-500">Type NTE</th>
+                            <th class="border-t border-gray-200 px-3 py-3 text-center bg-white font-bold text-gray-500">Status Stok</th>
+                            <th class="border-t border-gray-200 px-3 py-3 text-center bg-white font-bold text-gray-500">Jumlah</th>
+                            <th class="border-t border-gray-200 px-3 py-3 text-center bg-white font-bold text-gray-500">Witel</th>
+                            <th class="border-t border-gray-200 px-3 py-3 text-center bg-white font-bold text-gray-500">Tanggal Masuk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stock in recent_stocks %}
+                        <tr>
+                            <td class="border-t border-gray-200 px-3 py-3 text-center">{{ stock['Item Group'] }}</td>
+                            <td class="border-t border-gray-200 px-3 py-3 text-center">{{ stock['Jenis'] }}</td>
+                            <td class="border-t border-gray-200 px-3 py-3 text-center">{{ stock['Merek NTE'] }}</td>
+                            <td class="border-t border-gray-200 px-3 py-3 text-center">{{ stock['Type NTE'] }}</td>
+                            <td class="border-t border-gray-200 px-3 py-3 text-center">{{ stock['Status Stok'] }}</td>
+                            <td class="border-t border-gray-200 px-3 py-3 text-center">{{ stock['Jumlah Stok'] }}</td>
+                            <td class="border-t border-gray-200 px-3 py-3 text-center">{{ stock['namawitel'] }}</td>
+                            <td class="border-t border-gray-200 px-3 py-3 text-center">{{ stock['Tanggal Masuk'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+            // Data dari Flask
+            const itemGroupChartData = JSON.parse('{{ item_group_chart_data | safe }}');
+            const warehouseChartData = JSON.parse('{{ warehouse_chart_data | safe }}');
+            const sumStockChartData = JSON.parse('{{ sum_stock_chart_data | safe }}');
+            const stockStatusChartData = JSON.parse('{{ stock_status_chart_data | safe }}');
+            const mixedChartData = JSON.parse('{{ mixed_chart_data | safe }}');
+            const double_line_chart_data = JSON.parse('{{ double_line_chart_data | safe }}');
+
+        
+            // Fungsi untuk memperbarui chart
+            function updateChart(chartId, apiUrl, params) {
+                fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(params),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const chart = Chart.getChart(chartId); // Ambil instance Chart.js
+                    if (chart) {
+                        chart.data.labels = data.labels || [];
+                        chart.data.datasets[0].data = data.data || [];
+                        chart.update(); // Render ulang chart
+                    } else {
+                        console.error(`Chart with ID ${chartId} not found.`);
+                    }
+                })
+                .catch(error => console.error(`Error updating chart ${chartId}:`, error));
+            }
+            function updateSubJenisChart() {
+            const params = {
+                warehouse: whSubDateFilter.value,
+                item_group: itemGroupFilter.value,
+                start_date: startDateSubJenis.value,
+                end_date: endDateSubJenis.value
+            };
+
+            fetch('/dashboard/filter-sub-jenis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handling data for chart update
+                const mixedChart = Chart.getChart('mixedChart');
+                if (mixedChart) {
+                    mixedChart.destroy(); // Destroy existing chart
+                }
+                
+                // Create new chart with the updated data
+                const newChart = new Chart(document.getElementById('mixedChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Total Stok',
+                            data: data.data,
+                            backgroundColor: 'rgb(204, 43, 82)',
+                            yAxisID: 'y'
+                        }]
+                    },
+                    options: {
+                        // Your chart options
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching sub-jenis data:', error));
+        }        
+            // Event Listeners untuk filter
+            document.addEventListener('DOMContentLoaded', function() {
+                // Bar Chart Filter
+                const whStockItemFilter = document.getElementById('wh-stock-item');
+                const startDateStockItem = document.getElementById('start-date-stock-item');
+                const endDateStockItem = document.getElementById('end-date-stock-item');
+                const resetStockItemButton = document.getElementById('resetStockItem');
+
+                if (whStockItemFilter) {
+                    [whStockItemFilter, startDateStockItem, endDateStockItem].forEach(filterElement => {
+                        filterElement.addEventListener('change', function() {
+                            const warehouseId = whStockItemFilter.value;
+                            const startDate = startDateStockItem.value;
+                            const endDate = endDateStockItem.value;
+                            updateChart('barChart', '/dashboard/filter-item-group', { warehouse: warehouseId, start_date: startDate, end_date: endDate });
+                        });
+                    });
+                }
+
+                if (resetStockItemButton) {
+                    resetStockItemButton.addEventListener('click', function() {
+                        whStockItemFilter.value = '';
+                        startDateStockItem.value = '';
+                        endDateStockItem.value = '';
+                        updateChart('barChart', '/dashboard/filter-item-group', {});
+                    });
+                }
+
+                // Pie Chart Filter
+                const whDistributionFilter = document.getElementById('wh-distribution');
+                const startDateDistribution = document.getElementById('start-date-distribution');
+                const endDateDistribution = document.getElementById('end-date-distribution');
+                const resetDistributionButton = document.getElementById('resetDistribution');
+
+                if (whDistributionFilter) {
+                    [whDistributionFilter, startDateDistribution, endDateDistribution].forEach(filterElement => {
+                        filterElement.addEventListener('change', function() {
+                            const warehouseId = whDistributionFilter.value;
+                            const startDate = startDateDistribution.value;
+                            const endDate = endDateDistribution.value;
+                            updateChart('pieChart', '/dashboard/filter-warehouse', { warehouse: warehouseId, start_date: startDate, end_date: endDate });
+                        });
+                    });
+                }
+
+                if (resetDistributionButton) {
+                    resetDistributionButton.addEventListener('click', function() {
+                        whDistributionFilter.value = '';
+                        startDateDistribution.value = '';
+                        endDateDistribution.value = '';
+                        updateChart('pieChart', '/dashboard/filter-warehouse', {});
+                    });
+                }
+
+                // Line Chart Filter
+                const whEntryDateFilter = document.getElementById('wh-entry-date');
+                const startDateEntry = document.getElementById('start-date-entry');
+                const endDateEntry = document.getElementById('end-date-entry');
+                const resetEntryDateButton = document.getElementById('resetEntryDate');
+
+                if (whEntryDateFilter) {
+                    [whEntryDateFilter, startDateEntry, endDateEntry].forEach(filterElement => {
+                        filterElement.addEventListener('change', function() {
+                            const warehouseId = whEntryDateFilter.value;
+                            const startDate = startDateEntry.value;
+                            const endDate = endDateEntry.value;
+                            updateChart('lineChart', '/dashboard/filter-stock-date', { warehouse: warehouseId, start_date: startDate, end_date: endDate });
+                        });
+                    });
+                }
+
+                if (resetEntryDateButton) {
+                    resetEntryDateButton.addEventListener('click', function() {
+                        whEntryDateFilter.value = '';
+                        startDateEntry.value = '';
+                        endDateEntry.value = '';
+                        updateChart('lineChart', '/dashboard/filter-stock-date', {});
+                    });
+                }
+
+                // Doughnut Chart Filter
+                const whStatusFilter = document.getElementById('wh-status');
+                const startDateStatus = document.getElementById('start-date-status');
+                const endDateStatus = document.getElementById('end-date-status');
+                const resetStatusButton = document.getElementById('resetStatus');
+
+                if (whStatusFilter) {
+                    [whStatusFilter, startDateStatus, endDateStatus].forEach(filterElement => {
+                        filterElement.addEventListener('change', function() {
+                            const warehouseId = whStatusFilter.value;
+                            const startDate = startDateStatus.value;
+                            const endDate = endDateStatus.value;
+                            updateChart('doughnutChart', '/dashboard/filter-stock-status', { warehouse: warehouseId, start_date: startDate, end_date: endDate });
+                        });
+                    });
+                }
+
+                if (resetStatusButton) {
+                    resetStatusButton.addEventListener('click', function() {
+                        whStatusFilter.value = '';
+                        startDateStatus.value = '';
+                        endDateStatus.value = '';
+                        updateChart('doughnutChart', '/dashboard/filter-stock-status', {});
+                    });
+                }
+                // Event listeners untuk mixed chart         
+                const whSubDateFilter = document.getElementById('wh-sub-date');
+                const itemGroupFilter = document.getElementById('item-group-entry-date');
+                const startDateSubJenis = document.getElementById('start-date-sub-jenis');
+                const endDateSubJenis = document.getElementById('end-date-sub-jenis');
+                const resetSubJenisButton = document.getElementById('resetSubJenis');
+
+                if (whSubDateFilter && itemGroupFilter && startDateSubJenis && endDateSubJenis) {
+                    [whSubDateFilter, itemGroupFilter, startDateSubJenis, endDateSubJenis].forEach(filter => {
+                        filter.addEventListener('change', updateSubJenisChart);
+                    });
+                }
+
+                if (resetSubJenisButton) {
+                    resetSubJenisButton.addEventListener('click', function() {
+                        whSubDateFilter.value = '';
+                        itemGroupFilter.value = '';
+                        startDateSubJenis.value = '';
+                        endDateSubJenis.value = '';
+                        updateSubJenisChart('mixedChart', '/dashboard/filter-sub-jenis', {});
+                    });
+                }
+
+                // Event listeners untuk double line chart
+                const whDoubleLineFilter = document.getElementById('wh-doubleline');
+                const startDateDoubleLine = document.getElementById('start-date-doubleline');
+                const endDateDoubleLine = document.getElementById('end-date-doubleline');
+                const resetDoubleLineButton = document.getElementById('resetdoubleline');
+
+                function updateDoubleLineChart() {
+                    const params = {
+                        warehouse: whDoubleLineFilter.value,
+                        start_date: startDateDoubleLine.value,
+                        end_date: endDateDoubleLine.value
+                    };
+
+                    fetch('/dashboard/get-double-line-data', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(params)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.error) {
+                            doubleLineChart.data.labels = data.labels;
+                            doubleLineChart.data.datasets[0].data = data.avgStock;
+                            doubleLineChart.data.datasets[1].data = data.growthRate;
+                            doubleLineChart.update();
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                }
+
+                // Add event listeners
+                if (whDoubleLineFilter && startDateDoubleLine && endDateDoubleLine) {
+                    [whDoubleLineFilter, startDateDoubleLine, endDateDoubleLine].forEach(filter => {
+                        filter.addEventListener('change', updateDoubleLineChart);
+                    });
+                }
+
+                // Reset button
+                if (resetDoubleLineButton) {
+                    resetDoubleLineButton.addEventListener('click', function() {
+                        whDoubleLineFilter.value = '';
+                        startDateDoubleLine.value = '';
+                        endDateDoubleLine.value = '';
+                        updateDoubleLineChart();
+                    });
+                }
+
+            });
+
+            // Inisialisasi charts
+            function initializeCharts() {
+                // Total Stock per Item Group (Bar Chart)
+                new Chart(document.getElementById('barChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: itemGroupChartData.labels,
+                        datasets: [{
+                            label: "Total Stock",
+                            data: itemGroupChartData.data,
+                            backgroundColor: 'rgb(204, 43, 82)',
+                            borderColor: 'rgb(175, 23, 64)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            
+                // Stock Distribution per Warehouse (Pie Chart)
+                new Chart(document.getElementById('pieChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: warehouseChartData.labels,
+                        datasets: [{
+                            label: "Stock Distribution",
+                            data: warehouseChartData.data,
+                            backgroundColor: ['rgb(197, 34, 51)','rgb(165, 28, 48)','rgb(167, 51, 63)','rgb(116, 18, 29','rgb(88, 12, 31)']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            
+                // Average Stock per Entry Date (Line Chart)
+                new Chart(document.getElementById('lineChart'), {
+                    type: 'line',
+                    data: {
+                        labels: sumStockChartData.labels,
+                        datasets: [{
+                            label: "Jumlah Stok",
+                            data: sumStockChartData.data,
+                            backgroundColor: 'rgb(175, 23, 64)',
+                            borderColor: 'rgb(167, 51, 63)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            
+                // Stock Status Distribution (Doughnut Chart)
+                        new Chart(document.getElementById('doughnutChart'), {
+                            type: 'doughnut',
+                            data: {
+                                labels: stockStatusChartData.labels,
+                                datasets: [{
+                                    label: "Stock Status Distribution",
+                                    data: stockStatusChartData.data,
+                                    backgroundColor: [
+                                        'rgb(222, 124, 125)',
+                                        'rgb(204, 43, 82)',
+                                        'rgb(175, 23, 64)'
+                                    ]
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'right'
+                                    }
+                                }
+                            }
+                        });
+                      // Di dalam fungsi initializeCharts()
+                        const mixedChart = new Chart(document.getElementById('mixedChart'), {
+                            type: 'bar',
+                            data: {
+                                labels: mixedChartData.labels.map(label => new Date(label)),
+                                datasets: mixedChartData.datasets
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                interaction: {
+                                    mode: 'index',
+                                    intersect: false
+                                },
+                                scales: {
+                                    x: {
+                                        type: 'time',
+                                        time: {
+                                            unit: 'day',
+                                            displayFormats: {
+                                                day: 'dd MMM'
+                                            }
+                                        },
+                                        ticks: {
+                                            maxRotation: 45,
+                                            minRotation: 45
+                                        }
+                                    },
+                                    y: {
+                                        type: 'linear',
+                                        position: 'left',
+                                        title: {
+                                            display: true,
+                                            text: 'Total Stock'
+                                        }
+                                    },
+                                    y1: {
+                                        type: 'linear',
+                                        position: 'right',
+                                        title: {
+                                            display: true,
+                                            text: 'Growth Rate (%)'
+                                        },
+                                        grid: {
+                                            drawOnChartArea: false
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                        align: 'end'
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            title: function(tooltipItems) {
+                                                const date = new Date(tooltipItems[0].label);
+                                                return date.toLocaleDateString('id-ID', {
+                                                    weekday: 'long',
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric'
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                // Double Line Chart
+                const doubleLineChart = new Chart(document.getElementById('doubleLineChart'), {
+                    type: 'line',
+                    data: {
+                        labels: double_line_chart_data.labels, // Gunakan data dari backend
+                        datasets: [
+                            {
+                                label: 'Average Stock',
+                                data: double_line_chart_data.avgStock,
+                                borderColor: 'rgb(204, 43, 82)',
+                                backgroundColor: 'rgba(204, 43, 82, 0.1)',
+                                yAxisID: 'y',
+                                fill: true
+                            },
+                            {
+                                label: 'Growth Rate (%)',
+                                data: double_line_chart_data.growthRate,
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                                yAxisID: 'y1',
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y.toFixed(2);
+                                            if (context.datasetIndex === 1) {
+                                                label += '%';
+                                            }
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Average Stock'
+                                },
+                                beginAtZero: true
+                            },
+                            y1: {
+                                type: 'linear',
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Growth Rate (%)'
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            // Inisialisasi semua chart setelah konten dimuat
+            document.addEventListener('DOMContentLoaded', initializeCharts);
+        </script>    
+</body>
+</html>

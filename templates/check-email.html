@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Your Email - Stock Central</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles-reset-password.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="left-section">
+            <img src="{{ url_for('static', filename='assets/warehouse.jpg') }}" alt="Warehouse Image">
+        </div>
+
+        <div class="form-section">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='assets/stock-central-logo.png') }}" alt="Stock Central Logo">
+            </div>
+
+            <h1>Check Your Email</h1>
+            <p>We've sent you a link to reset your password.</p>
+            
+            <form action="/checkemail" method="POST">
+                <button type="button" onclick="goToResetPage()" class="btn-submit">Got it</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function goToResetPage() {
+            window.location.href = "new-password.html";  // Redirect to the new password page
+        }
+    </script>
+</body>
+</html>

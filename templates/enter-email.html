@@ -1,0 +1,42 @@
+{% block contentA %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password - Stock Central</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles-reset-password.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="left-section">
+            <img src="{{ url_for('static', filename='assets/warehouse2.jpg') }}" alt="Warehouse Image">
+        </div>
+
+        <div class="form-section">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='assets/stock-central-logo.png') }}" alt="stock-central-logo">
+            </div>
+
+            <h1>Forgot Your Password?</h1>
+            <p>No worries! Just enter your email, and we'll assist you.</p>
+           
+            <!-- Ubah action sesuai dengan url_for Flask -->
+            <form action="{{ url_for('enter_email') }}" method="POST">
+                <label for="email">Email</label>
+                <!-- Tambahkan atribut name untuk input -->
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+                <!-- Tombol reset password -->
+                <button type="submit" class="btn-submit">Reset Password</button>
+            </form>
+
+            <!-- Tombol back untuk kembali ke halaman login -->
+            <div class="back-button">
+                <a href="{{ url_for('login') }}">Back to Login?</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}
